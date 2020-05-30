@@ -1,0 +1,11 @@
+include <system>;
+include <system> as sys;
+
+
+
+int s="s";
+
+
+
+sys.out.write("char:",'a',0_102983.478__3794);
+system.out.writeln("\"");
