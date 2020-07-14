@@ -1,3 +1,8 @@
 ### Github File Push Ignore
 
-index.exe
+*.exe
+*.obj
+*.dll
+*.lib
+*.exp
+build
