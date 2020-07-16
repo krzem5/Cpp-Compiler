@@ -40,20 +40,17 @@ namespace krzem::core{
 
 
 	enum OBJECT_MODIFIER:unsigned int{
-		OBJECT_MODIFIER_NONE=0x00,
-		OBJECT_MODIFIER_PUBLIC=0x01,
-		OBJECT_MODIFIER_PRIVATE=0x02,
-		OBJECT_MODIFIER_STATIC=0x04,
-		OBJECT_MODIFIER_EXPORT=0x08,
-		OBJECT_MODIFIER_FROZEN=0x10,
-		OBJECT_MODIFIER_FROZENTYPE=0x20
-	};
-
-
-
-	struct FileObject{
-		std::string fp;
-		std::string dt;
+		OBJECT_MODIFIER_NONE=0x000,
+		OBJECT_MODIFIER_PUBLIC=0x001,
+		OBJECT_MODIFIER_PRIVATE=0x002,
+		OBJECT_MODIFIER_STATIC=0x004,
+		OBJECT_MODIFIER_EXPORT=0x008,
+		OBJECT_MODIFIER_FROZEN=0x010,
+		OBJECT_MODIFIER_FROZENTYPE=0x020,
+		OBJECT_MODIFIER_ZERO_ARG=0x040,
+		OBJECT_MODIFIER_ONE_ARG=0x080,
+		OBJECT_MODIFIER_LIST_ARG=0x100,
+		OBJECT_MODIFIER_NAME_ARG=0x200
 	};
 
 
@@ -61,8 +58,25 @@ namespace krzem::core{
 	struct Object{
 		unsigned int type;
 		unsigned int modifiers;
+		void* value;
 		std::map<std::string,Object> properties;
 		std::map<std::string,void*> i_properties;
+	};
+
+
+
+	union FunctionArgs{
+		void* zero;
+		Object one;
+		Object* list;
+		std::map<std::string,Object> dict;
+	};
+
+
+
+	struct FileObject{
+		std::string fp;
+		std::string dt;
 	};
 
 

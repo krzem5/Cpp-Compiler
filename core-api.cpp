@@ -5,19 +5,20 @@
 
 
 
-void krzem::core_api::system::out(krzem::core::Object* al){
-	std::cout<<sizeof(al)<<"\n";
+void krzem::core_api::system::out(krzem::core::FunctionArgs a){
+	std::cout<<sizeof(a.one)<<"\n";
 }
 
 
 
-void krzem::core_api::system::err(krzem::core::Object* al){
-	std::cerr<<"E: "<<sizeof(al)<<"\n";
+void krzem::core_api::system::err(krzem::core::FunctionArgs a){
+	std::cerr<<"E: "<<sizeof(a.one)<<"\n";
 }
 
 
 
-void krzem::core_api::error::raise(krzem::core::Object e){
+void krzem::core_api::error::raise(krzem::core::FunctionArgs a){
+	krzem::core::Object e=a.one;
 	if (e.type!=krzem::core::OBJECT_TYPE_ERROR){
 		e={krzem::core::OBJECT_TYPE_ERROR,krzem::core::OBJECT_MODIFIER_NONE,{},{{"name",krzem::core::constant<std::string>(&std::string("TypeError"))},{"msg",krzem::core::constant<std::string>(&(std::string("Expected Type 'error', found Type '")+*static_cast<std::string*>(krzem::core::get_attr(krzem::core::get_type(e),"type",&std::string("Undefined")))+"'."))},{"cs",krzem::core::constant<krzem::core::CallStack>(&krzem::core::CallStack())}}};
 	}

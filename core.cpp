@@ -17,32 +17,30 @@ void krzem::core::init(){
 	native_modules["native:_sys"]={
 		OBJECT_TYPE_MODULE,
 		OBJECT_MODIFIER_NONE,
+		nullptr,
 		{
 			{
 				"out",
 				{
 					OBJECT_TYPE_NATIVE_FUNCTION,
-					OBJECT_MODIFIER_NONE,
-					{},
-					{{"func_ptr",krzem::core_api::system::out}}
+					OBJECT_MODIFIER_ONE_ARG,
+					krzem::core_api::system::out
 				}
 			},
 			{
 				"err",
 				{
 					OBJECT_TYPE_NATIVE_FUNCTION,
-					OBJECT_MODIFIER_NONE,
-					{},
-					{{"func_ptr",krzem::core_api::system::err}}
+					OBJECT_MODIFIER_ONE_ARG,
+					krzem::core_api::system::err
 				}
 			},
 			{
 				"path",
 				{
 					OBJECT_TYPE_STRING,
-					OBJECT_MODIFIER_EXPORT,
-					{},
-					{{"value",&krzem::core_api::system::path}}
+					OBJECT_MODIFIER_NONE,
+					&krzem::core_api::system::path
 				}
 			}
 		}
@@ -53,7 +51,7 @@ void krzem::core::init(){
 
 krzem::core::FileObject krzem::core::read_file(const char* fp,bool* e,krzem::core::CallStack cs){
 	if (krzem::platform_api::file_exists(fp)==false){
-		krzem::core_api::error::raise(krzem::core::create_error("FileNotFoundError",std::string("File '")+fp+"' not Found.",cs));
+		krzem::core_api::error::raise({.one=krzem::core::create_error("FileNotFoundError",std::string("File '")+fp+"' not Found.",cs)});
 		*e=true;
 		return {};
 	}
@@ -301,7 +299,7 @@ krzem::core::Object krzem::core::patch_object(krzem::core::Object o){
 
 
 inline krzem::core::Object krzem::core::create_error(std::string nm,std::string msg,krzem::core::CallStack cs){
-	return krzem::core::patch_object({krzem::core::OBJECT_TYPE_ERROR,krzem::core::OBJECT_MODIFIER_NONE,{},{{"name",krzem::core::constant<std::string>(&std::string(nm))},{"msg",krzem::core::constant<std::string>(&std::string(msg))},{"cs",krzem::core::constant<krzem::core::CallStack>(&cs)}}});
+	return krzem::core::patch_object({krzem::core::OBJECT_TYPE_ERROR,krzem::core::OBJECT_MODIFIER_NONE,nullptr,{},{{"name",krzem::core::constant<std::string>(&std::string(nm))},{"msg",krzem::core::constant<std::string>(&std::string(msg))},{"cs",krzem::core::constant<krzem::core::CallStack>(&cs)}}});
 }
 
 
@@ -374,7 +372,7 @@ krzem::core::Object krzem::core::get_type(krzem::core::Object o){
 			t="Unknown";
 			break;
 	}
-	return {krzem::core::OBJECT_TYPE_TYPE,krzem::core::OBJECT_MODIFIER_NONE,{},{{"type",&t}}};
+	return {krzem::core::OBJECT_TYPE_TYPE,krzem::core::OBJECT_MODIFIER_NONE,nullptr,{},{{"type",&t}}};
 }
 
 

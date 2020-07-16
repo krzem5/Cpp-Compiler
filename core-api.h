@@ -8,15 +8,15 @@ namespace krzem::core_api::system{
 
 
 
-	void out(krzem::core::Object* al);
+	void out(krzem::core::FunctionArgs a);
 
 
 
-	void err(krzem::core::Object* al);
+	void err(krzem::core::FunctionArgs a);
 }
 
 
 
 namespace krzem::core_api::error{
-	void raise(krzem::core::Object e);
+	void raise(krzem::core::FunctionArgs a);
 }
