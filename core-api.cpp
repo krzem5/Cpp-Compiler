@@ -5,28 +5,34 @@
 
 
 
-void krzem::core_api::system::out(krzem::core::FunctionArgs a){
-	std::cout<<sizeof(a.one)<<"\n";
+void krzem::core_api::system::out(krzem::core::Object* cls,krzem::core::Object* a){
+	std::cout<<sizeof((*a).value)<<"\n";
 }
 
 
 
-void krzem::core_api::system::err(krzem::core::FunctionArgs a){
-	std::cerr<<"E: "<<sizeof(a.one)<<"\n";
+void krzem::core_api::system::err(krzem::core::Object* cls,krzem::core::Object* a){
+	std::cerr<<"E: "<<sizeof((*a).value)<<"\n";
 }
 
 
 
-void krzem::core_api::error::raise(krzem::core::FunctionArgs a){
-	krzem::core::Object e=a.one;
-	if (e.type!=krzem::core::OBJECT_TYPE_ERROR){
-		e={krzem::core::OBJECT_TYPE_ERROR,krzem::core::OBJECT_MODIFIER_NONE,{},{{"name",krzem::core::constant<std::string>(&std::string("TypeError"))},{"msg",krzem::core::constant<std::string>(&(std::string("Expected Type 'error', found Type '")+*static_cast<std::string*>(krzem::core::get_attr(krzem::core::get_type(e),"type",&std::string("Undefined")))+"'."))},{"cs",krzem::core::constant<krzem::core::CallStack>(&krzem::core::CallStack())}}};
+void krzem::core_api::error::raise(krzem::core::Object* cls,krzem::core::Object* a){
+	if ((*a).type!=krzem::core::OBJECT_TYPE_ERROR){
+		krzem::core_api::error::raise_internal({std::string("TypeError"),std::string("Expected Type 'error', found Type '")+*static_cast<std::string*>(krzem::core::get_attr(krzem::core::get_type(*a),"type",&std::string("Undefined")))+"'.",krzem::core::CallStack()});
 	}
-	krzem::core::CallStack cs=*static_cast<krzem::core::CallStack*>(e.i_properties["cs"]);
+	else{
+		krzem::core_api::error::raise_internal({*static_cast<std::string*>(krzem::core::get_attr((*a),"name",&std::string("Error"))),*static_cast<std::string*>(krzem::core::get_attr((*a),"msg",&std::string(""))),*static_cast<krzem::core::CallStack*>((*a).i_properties["cs"])});
+	}
+}
+
+
+
+void krzem::core_api::error::raise_internal(krzem::core::ErrorObject e){
 	size_t j;
 	unsigned int k;
 	std::string ln;
-	for (krzem::core::CallStack::iterator i=cs.begin();i!=cs.end();i++){
+	for (krzem::core::CallStack::iterator i=e.cs.begin();i!=e.cs.end();i++){
 		j=0;
 		k=0;
 		while (true){
@@ -47,6 +53,6 @@ void krzem::core_api::error::raise(krzem::core::FunctionArgs a){
 			k++;
 		}
 	}
-	std::cerr<<*static_cast<std::string*>(krzem::core::get_attr(e,"name",&std::string("Error")))<<": "<<*static_cast<std::string*>(krzem::core::get_attr(e,"msg",&std::string("")))<<"\n";
+	std::cerr<<e.nm<<": "<<e.msg<<"\n";
 	std::cerr.flush();
 }

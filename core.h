@@ -65,15 +65,6 @@ namespace krzem::core{
 
 
 
-	union FunctionArgs{
-		void* zero;
-		Object one;
-		Object* list;
-		std::map<std::string,Object> dict;
-	};
-
-
-
 	struct FileObject{
 		std::string fp;
 		std::string dt;
@@ -91,6 +82,14 @@ namespace krzem::core{
 
 
 	typedef std::vector<CallStackElem> CallStack;
+
+
+
+	struct ErrorObject{
+		std::string nm;
+		std::string msg;
+		CallStack cs;
+	};
 
 
 
@@ -170,10 +169,6 @@ namespace krzem::core{
 
 
 	Object patch_object(Object o);
-
-
-
-	inline Object create_error(std::string nm,std::string msg,CallStack cs);
 
 
 

@@ -51,7 +51,7 @@ void krzem::core::init(){
 
 krzem::core::FileObject krzem::core::read_file(const char* fp,bool* e,krzem::core::CallStack cs){
 	if (krzem::platform_api::file_exists(fp)==false){
-		krzem::core_api::error::raise({.one=krzem::core::create_error("FileNotFoundError",std::string("File '")+fp+"' not Found.",cs)});
+		krzem::core_api::error::raise_internal({"FileNotFoundError",std::string("File '")+fp+"' not Found.",cs});
 		*e=true;
 		return {};
 	}
@@ -152,64 +152,64 @@ krzem::core::ASTObject krzem::core::parse_ast(krzem::core::FileObject fo,bool* e
 		switch (t.type){
 			case krzem::core::TOKEN_TYPE_UNKNOWN:
 			default:
-				krzem::core_api::error::raise(krzem::core::create_error("UnexpectedCharacterError","Unexpected character '"+t.value+"'.",krzem::core::extend_call_stack(cs,{fo,krzem::core::token_to_line(fo.dt,t),krzem::core::token_to_line(fo.dt,t),krzem::core::get_last_func_name(cs)})));
+				krzem::core_api::error::raise_internal({"UnexpectedCharacterError","Unexpected character '"+t.value+"'.",krzem::core::extend_call_stack(cs,{fo,krzem::core::token_to_line(fo.dt,t),krzem::core::token_to_line(fo.dt,t),krzem::core::get_last_func_name(cs)})});
 				*e=true;
 				return {};
 			case krzem::core::TOKEN_TYPE_KEYWORD:
 				if (t.value=="use"){
 					krzem::core::ASTToken m_t=krzem::core::next_token(fo.dt,t);
 					if (m_t.type==krzem::core::TOKEN_TYPE_ERROR){
-						krzem::core_api::error::raise(krzem::core::create_error("SyntaxError",m_t.value,krzem::core::extend_call_stack(cs,{fo,krzem::core::token_to_line(fo.dt,m_t),krzem::core::token_to_line(fo.dt,m_t),krzem::core::get_last_func_name(cs)})));
+						krzem::core_api::error::raise_internal({"SyntaxError",m_t.value,krzem::core::extend_call_stack(cs,{fo,krzem::core::token_to_line(fo.dt,m_t),krzem::core::token_to_line(fo.dt,m_t),krzem::core::get_last_func_name(cs)})});
 						return o;
 					}
 					else if (m_t.type!=krzem::core::TOKEN_TYPE_MODULE_INDENTIFIER){
-						krzem::core_api::error::raise(krzem::core::create_error("UnexpectedCharacterError","Expected `a Module Indenifier, found '"+m_t.value+"'.",krzem::core::extend_call_stack(cs,{fo,krzem::core::token_to_line(fo.dt,t),krzem::core::token_to_line(fo.dt,m_t),krzem::core::get_last_func_name(cs)})));
+						krzem::core_api::error::raise_internal({"UnexpectedCharacterError","Expected `a Module Indenifier, found '"+m_t.value+"'.",krzem::core::extend_call_stack(cs,{fo,krzem::core::token_to_line(fo.dt,t),krzem::core::token_to_line(fo.dt,m_t),krzem::core::get_last_func_name(cs)})});
 						*e=true;
 						return o;
 					}
 					krzem::core::ASTToken e_t=krzem::core::next_token(fo.dt,m_t);
 					if (e_t.type==krzem::core::TOKEN_TYPE_ERROR){
-						krzem::core_api::error::raise(krzem::core::create_error("SyntaxError",e_t.value,krzem::core::extend_call_stack(cs,{fo,krzem::core::token_to_line(fo.dt,e_t),krzem::core::token_to_line(fo.dt,e_t),krzem::core::get_last_func_name(cs)})));
+						krzem::core_api::error::raise_internal({"SyntaxError",e_t.value,krzem::core::extend_call_stack(cs,{fo,krzem::core::token_to_line(fo.dt,e_t),krzem::core::token_to_line(fo.dt,e_t),krzem::core::get_last_func_name(cs)})});
 						return o;
 					}
 					else if (e_t.type==krzem::core::TOKEN_TYPE_SEMICOLON){
 						std::string m_fp=krzem::core::find_module(m_t.value);
 						if (m_fp.length()==0){
-							krzem::core_api::error::raise(krzem::core::create_error("ModuleNotFoundError","Module '"+m_t.value+"' not Found.",krzem::core::extend_call_stack(cs,{fo,krzem::core::token_to_line(fo.dt,t),krzem::core::token_to_line(fo.dt,e_t),krzem::core::get_last_func_name(cs)})));
+							krzem::core_api::error::raise_internal({"ModuleNotFoundError","Module '"+m_t.value+"' not Found.",krzem::core::extend_call_stack(cs,{fo,krzem::core::token_to_line(fo.dt,t),krzem::core::token_to_line(fo.dt,e_t),krzem::core::get_last_func_name(cs)})});
 							*e=true;
 							return o;
 						}
 						ips.vl[krzem::core::get_module_name(m_t.value)]=krzem::core::object_from_module(m_fp,krzem::core::extend_call_stack(cs,{fo,krzem::core::token_to_line(fo.dt,t),krzem::core::token_to_line(fo.dt,e_t),krzem::core::get_last_func_name(cs)}));
 					}
 					else if (e_t.type!=krzem::core::TOKEN_TYPE_KEYWORD||e_t.value!="as"){
-						krzem::core_api::error::raise(krzem::core::create_error("UnexpectedCharacterError","Expected a Keyword ('as') or a Semicolon (';'), found '"+e_t.value+"'.",krzem::core::extend_call_stack(cs,{fo,krzem::core::token_to_line(fo.dt,e_t),krzem::core::token_to_line(fo.dt,e_t),krzem::core::get_last_func_name(cs)})));
+						krzem::core_api::error::raise_internal({"UnexpectedCharacterError","Expected a Keyword ('as') or a Semicolon (';'), found '"+e_t.value+"'.",krzem::core::extend_call_stack(cs,{fo,krzem::core::token_to_line(fo.dt,e_t),krzem::core::token_to_line(fo.dt,e_t),krzem::core::get_last_func_name(cs)})});
 						*e=true;
 						return o;
 					}
 					else{
 						krzem::core::ASTToken o_nm_t=krzem::core::next_token(fo.dt,e_t);
 						if (o_nm_t.type==krzem::core::TOKEN_TYPE_ERROR){
-							krzem::core_api::error::raise(krzem::core::create_error("SyntaxError",o_nm_t.value,krzem::core::extend_call_stack(cs,{fo,krzem::core::token_to_line(fo.dt,o_nm_t),krzem::core::token_to_line(fo.dt,o_nm_t),krzem::core::get_last_func_name(cs)})));
+							krzem::core_api::error::raise_internal({"SyntaxError",o_nm_t.value,krzem::core::extend_call_stack(cs,{fo,krzem::core::token_to_line(fo.dt,o_nm_t),krzem::core::token_to_line(fo.dt,o_nm_t),krzem::core::get_last_func_name(cs)})});
 							return o;
 						}
 						else if (o_nm_t.type!=krzem::core::TOKEN_TYPE_MODULE_NAME_INDENTIFIER){
-							krzem::core_api::error::raise(krzem::core::create_error("UnexpectedCharacterError","Expected Module Name Indenifier, found '"+o_nm_t.value+"'.",krzem::core::extend_call_stack(cs,{fo,krzem::core::token_to_line(fo.dt,o_nm_t),krzem::core::token_to_line(fo.dt,o_nm_t),krzem::core::get_last_func_name(cs)})));
+							krzem::core_api::error::raise_internal({"UnexpectedCharacterError","Expected Module Name Indenifier, found '"+o_nm_t.value+"'.",krzem::core::extend_call_stack(cs,{fo,krzem::core::token_to_line(fo.dt,o_nm_t),krzem::core::token_to_line(fo.dt,o_nm_t),krzem::core::get_last_func_name(cs)})});
 							*e=true;
 							return o;
 						}
 						e_t=krzem::core::next_token(fo.dt,o_nm_t);
 						if (e_t.type==krzem::core::TOKEN_TYPE_ERROR){
-							krzem::core_api::error::raise(krzem::core::create_error("SyntaxError",e_t.value,krzem::core::extend_call_stack(cs,{fo,krzem::core::token_to_line(fo.dt,e_t),krzem::core::token_to_line(fo.dt,e_t),krzem::core::get_last_func_name(cs)})));
+							krzem::core_api::error::raise_internal({"SyntaxError",e_t.value,krzem::core::extend_call_stack(cs,{fo,krzem::core::token_to_line(fo.dt,e_t),krzem::core::token_to_line(fo.dt,e_t),krzem::core::get_last_func_name(cs)})});
 							return o;
 						}
 						else if (e_t.type!=krzem::core::TOKEN_TYPE_SEMICOLON){
-							krzem::core_api::error::raise(krzem::core::create_error("UnexpectedCharacterError","Expected a Semicolon (';'), found '"+e_t.value+"'.",krzem::core::extend_call_stack(cs,{fo,krzem::core::token_to_line(fo.dt,e_t),krzem::core::token_to_line(fo.dt,e_t),krzem::core::get_last_func_name(cs)})));
+							krzem::core_api::error::raise_internal({"UnexpectedCharacterError","Expected a Semicolon (';'), found '"+e_t.value+"'.",krzem::core::extend_call_stack(cs,{fo,krzem::core::token_to_line(fo.dt,e_t),krzem::core::token_to_line(fo.dt,e_t),krzem::core::get_last_func_name(cs)})});
 							*e=true;
 							return o;
 						}
 						std::string m_fp=krzem::core::find_module(m_t.value);
 						if (m_fp.length()==0){
-							krzem::core_api::error::raise(krzem::core::create_error("ModuleNotFoundError","Module '"+m_t.value+"' not Found.",krzem::core::extend_call_stack(cs,{fo,krzem::core::token_to_line(fo.dt,t),krzem::core::token_to_line(fo.dt,e_t),krzem::core::get_last_func_name(cs)})));
+							krzem::core_api::error::raise_internal({"ModuleNotFoundError","Module '"+m_t.value+"' not Found.",krzem::core::extend_call_stack(cs,{fo,krzem::core::token_to_line(fo.dt,t),krzem::core::token_to_line(fo.dt,e_t),krzem::core::get_last_func_name(cs)})});
 							*e=true;
 							return o;
 						}
@@ -226,7 +226,7 @@ krzem::core::ASTObject krzem::core::parse_ast(krzem::core::FileObject fo,bool* e
 					t=e_t;
 				}
 			case krzem::core::TOKEN_TYPE_ERROR:
-				krzem::core_api::error::raise(krzem::core::create_error("SyntaxError",t.value,krzem::core::extend_call_stack(cs,{fo,krzem::core::token_to_line(fo.dt,t),krzem::core::token_to_line(fo.dt,t),krzem::core::get_last_func_name(cs)})));
+				krzem::core_api::error::raise_internal({"SyntaxError",t.value,krzem::core::extend_call_stack(cs,{fo,krzem::core::token_to_line(fo.dt,t),krzem::core::token_to_line(fo.dt,t),krzem::core::get_last_func_name(cs)})});
 				return o;
 			case krzem::core::TOKEN_TYPE_END_OF_DATA:
 				return o;
@@ -246,17 +246,17 @@ std::string krzem::core::find_module(std::string nm){
 	}
 	size_t i=0;
 	size_t j;
-	std::string t;
 	while (true){
-		j=krzem::core_api::system::path.substr(i).find(";");
-		t=krzem::core_api::system::path.substr(i,j)+(krzem::core_api::system::path[(j==-1?krzem::core_api::system::path.length():i+j)-1]!='\\'?"\\":"")+nm+".";
-		if (krzem::platform_api::file_exists((t+"FILE").c_str())==true){
-			return t+"FILE";
+		for (j=0;j<strlen(krzem::core_api::system::path)-i;j++){
+			if (krzem::core_api::system::path[i+j]==';'){
+				break;
+			}
 		}
-		else if (krzem::platform_api::file_exists((t+"h").c_str())==true){
-			// HEADER(.h) + DLL(.dll) //
+		const char* t=strcat(const_cast<char*>(strcat(const_cast<char*>(strcat((char*)memcpy(malloc(j),krzem::core_api::system::path+i,j),(krzem::core_api::system::path[i+j-1]!='\\'?"\\":""))),nm.c_str())),".");
+		if (krzem::platform_api::file_exists(strcat(const_cast<char*>(t),"FILE"))==true){
+			return strcat(const_cast<char*>(t),"FILE");
 		}
-		if (j==-1){
+		if (j==strlen(krzem::core_api::system::path)-i){
 			break;
 		}
 		i+=j+1;
@@ -294,12 +294,6 @@ krzem::core::Object krzem::core::compile_module(krzem::core::FileObject fo,krzem
 
 krzem::core::Object krzem::core::patch_object(krzem::core::Object o){
 	return o;/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-}
-
-
-
-inline krzem::core::Object krzem::core::create_error(std::string nm,std::string msg,krzem::core::CallStack cs){
-	return krzem::core::patch_object({krzem::core::OBJECT_TYPE_ERROR,krzem::core::OBJECT_MODIFIER_NONE,nullptr,{},{{"name",krzem::core::constant<std::string>(&std::string(nm))},{"msg",krzem::core::constant<std::string>(&std::string(msg))},{"cs",krzem::core::constant<krzem::core::CallStack>(&cs)}}});
 }
 
 
