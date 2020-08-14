@@ -1,4 +1,4 @@
-#include <core.h>//31307+31308
+#include <core.h>
 #include <core-api.h>
 #include <platform.h>
 #include <algorithm>
@@ -7,9 +7,6 @@
 #include <string>
 #include <map>
 #include <memory>
-#include <windows.h>
-#include <imagehlp.h>
-#pragma comment(lib,"imagehlp")
 
 
 
@@ -247,7 +244,7 @@ std::string krzem::core::find_module(std::string nm){
 	size_t i=0;
 	size_t j;
 	while (true){
-		for (j=0;j<strlen(krzem::core_api::system::path)-i;j++){
+		for (j=0;j<str_len(krzem::core_api::system::path)-i;j++){
 			if (krzem::core_api::system::path[i+j]==';'){
 				break;
 			}
@@ -256,7 +253,7 @@ std::string krzem::core::find_module(std::string nm){
 		if (krzem::platform_api::file_exists(strcat(const_cast<char*>(t),"FILE"))==true){
 			return strcat(const_cast<char*>(t),"FILE");
 		}
-		if (j==strlen(krzem::core_api::system::path)-i){
+		if (j==str_len(krzem::core_api::system::path)-i){
 			break;
 		}
 		i+=j+1;
