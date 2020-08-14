@@ -1,0 +1,13 @@
+use <sysA>;
+use <sys> as *;
+use <sys> as system;
+
+
+
+int s="s";
+
+
+
+sys.stdout.write("char:",'a',0_102983.478__3794);
+system.stdout.writeln("\"");
+stdout.writeln("\n);

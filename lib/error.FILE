@@ -1,0 +1,14 @@
+use <_error>;
+
+
+
+export frozen BaseError=_error.base;
+export frozen CompilerError=decltype("CompilerError",BaseError);
+export frozen ModuleNotFoundError=decltype("ModuleNotFoundError",CompilerError);
+export frozen UnexpectedCharacterError=decltype("UnexpectedCharacterError",CompilerError);
+export frozen RuntimeError=decltype("RuntimeError",BaseError);
+
+
+
+export frozen get_current_stack=_error.get_stack;
+export frozen raise_error=_error.raise;
