@@ -3,7 +3,7 @@
 
 
 namespace krzem::core_api::system{
-	static const char* path="D:\\K\\Coding\\projects\\Cpp-Compiler\\lib\\;";
+	static const char* path="D:\\K\\Coding\\Cpp-Compiler\\lib\\;";
 
 
 
